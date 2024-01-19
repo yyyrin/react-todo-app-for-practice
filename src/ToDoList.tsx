@@ -32,16 +32,31 @@ import { useForm } from "react-hook-form";
 //   );
 // };
 
+interface IForm {
+  email: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  password: string;
+  passwordConfirmation: string;
+}
+
 const ToDoList = () => {
   // useForm 훅을 사용하여 폼 상태 관리
-  const { register, handleSubmit, formState } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IForm>({
+    defaultValues: {
+      email: "@naver.com",
+    },
+  });
 
   // form이 유효할 때 호출하는 콜백 함수
   const onValid = (data: any) => {
     console.log("data", data);
   };
-
-  console.log("error", formState.errors);
 
   return (
     <div>
@@ -54,23 +69,37 @@ const ToDoList = () => {
         필수 입력 필드에 대한 유효성 검사 및 기타 표준 HTML 유효성 규칙을 포함함
         각 field는 registration process에서 key로 사용될 "이름"을 가져야 함
         */}
-        <input {...register("email", { required: true })} placeholder="Email" />
         <input
-          {...register("firstName", { required: true })}
+          {...register("email", {
+            required: "Email is required",
+            pattern: {
+              value: /^[A-Za-z0-9._%+-]+@naver.com$/,
+              message: "Only naver.com emails allowed",
+            },
+          })}
+          placeholder="Email"
+        />
+        <span>{errors?.email?.message}</span>
+        <input
+          {...register("firstName", { required: "write here" })}
           placeholder="First Name"
         />
+        <span>{errors?.firstName?.message}</span>
         <input
-          {...register("lastName", { required: true })}
+          {...register("lastName", { required: "write here" })}
           placeholder="Last Name"
         />
+        <span>{errors?.lastName?.message}</span>
         <input
-          {...register("username", { required: true, minLength: 10 })}
+          {...register("username", { required: "write here", minLength: 10 })}
           placeholder="Username"
         />
+        <span>{errors?.username?.message}</span>
         <input
-          {...register("password", { required: true, minLength: 5 })}
+          {...register("password", { required: "write here", minLength: 5 })}
           placeholder="Password"
         />
+        <span>{errors?.password?.message}</span>
         <input
           {...register("passwordConfirmation", {
             required: "Password is required",
@@ -78,6 +107,7 @@ const ToDoList = () => {
           })}
           placeholder="Password Confirmation"
         />
+        <span>{errors?.passwordConfirmation?.message}</span>
         <button>Add</button>
       </form>
     </div>
@@ -111,4 +141,8 @@ input {...register('lastName', { required: true })}
 
 - handleSubmit: ((data: Object, e?: Event) => void, (errors: Object, e?: Event) => void) => Function
   - form 유효성 검사가 성공하면 form 데이터를 받음
+
+- defaultValues: Record<string, any> = {}
+  - input에 대한 defaultValues는 사용자가 component와 상호 작용하기 전에 component가 처음 렌더링될 때 초기 값으로 사용됨
+  - 모든 input에 대한 defaultValues를 빈 문자열이나 null과 같은 정의되지 않은 값으로 설정하는 것이 좋음
 */

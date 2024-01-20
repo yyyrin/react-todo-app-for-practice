@@ -39,6 +39,7 @@ interface IForm {
   username: string;
   password: string;
   passwordConfirmation: string;
+  extraError?: string;
 }
 
 const ToDoList = () => {
@@ -47,6 +48,7 @@ const ToDoList = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<IForm>({
     defaultValues: {
       email: "@naver.com",
@@ -54,8 +56,17 @@ const ToDoList = () => {
   });
 
   // form이 유효할 때 호출하는 콜백 함수
-  const onValid = (data: any) => {
-    console.log("data", data);
+  const onValid = (data: IForm) => {
+    if (data.password !== data.passwordConfirmation) {
+      setError(
+        "passwordConfirmation",
+        {
+          message: "Password are not the same.",
+        },
+        { shouldFocus: true }
+      );
+      // setError("extraError", { message: "Server offline." });
+    }
   };
 
   return (
@@ -81,7 +92,15 @@ const ToDoList = () => {
         />
         <span>{errors?.email?.message}</span>
         <input
-          {...register("firstName", { required: "write here" })}
+          {...register("firstName", {
+            required: "write here",
+            validate: {
+              noYeguu: (value) =>
+                value.includes("yeguu") ? "no yeguu allowed" : true,
+              noNick: (value) =>
+                value.includes("nick") ? "no nick allowed" : true,
+            },
+          })}
           placeholder="First Name"
         />
         <span>{errors?.firstName?.message}</span>
@@ -109,6 +128,7 @@ const ToDoList = () => {
         />
         <span>{errors?.passwordConfirmation?.message}</span>
         <button>Add</button>
+        <span>{errors?.extraError?.message}</span>
       </form>
     </div>
   );
@@ -145,4 +165,11 @@ input {...register('lastName', { required: true })}
 - defaultValues: Record<string, any> = {}
   - input에 대한 defaultValues는 사용자가 component와 상호 작용하기 전에 component가 처음 렌더링될 때 초기 값으로 사용됨
   - 모든 input에 대한 defaultValues를 빈 문자열이나 null과 같은 정의되지 않은 값으로 설정하는 것이 좋음
+
+- setError: (name: string, error: FieldError, { shouldFocus?: boolean }) => void
+  - 이 함수를 사용하면 하나 이상의 오류를 수동으로 설정 가능
+
+- shouldFocus?: boolean
+  - 오류를 설정하는 동안 input에 focus을 맞춰야 함
+  - input이 비활성화되면 shouldFocus가 작동하지 않음
 */

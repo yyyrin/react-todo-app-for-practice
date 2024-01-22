@@ -1,134 +1,27 @@
 import { useForm } from "react-hook-form";
 
-// const ToDoList = () => {
-//   const [toDo, settoDo] = useState("");
-//   const [toDoError, setToDoError] = useState("");
-
-//   const onChange = (event: React.FormEvent<HTMLInputElement>) => {
-//     const {
-//       currentTarget: { value },
-//     } = event;
-//     setToDoError("");
-//     settoDo(value);
-//   };
-
-//   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-//     event.preventDefault();
-//     // validation
-//     if (toDo.length < 10) {
-//       return setToDoError("To do should be longer");
-//     }
-//     console.log("submit");
-//   };
-
-//   return (
-//     <div>
-//       <form onSubmit={onSubmit}>
-//         <input value={toDo} onChange={onChange} placeholder="Write a to do" />
-//         <button>Add</button>
-//         {toDoError !== "" ? toDoError : null}
-//       </form>
-//     </div>
-//   );
-// };
-
 interface IForm {
-  email: string;
-  firstName: string;
-  lastName: string;
-  username: string;
-  password: string;
-  passwordConfirmation: string;
-  extraError?: string;
+  toDo: string;
 }
 
 const ToDoList = () => {
-  // useForm 훅을 사용하여 폼 상태 관리
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-  } = useForm<IForm>({
-    defaultValues: {
-      email: "@naver.com",
-    },
-  });
+  const { register, handleSubmit, setValue } = useForm<IForm>();
 
-  // form이 유효할 때 호출하는 콜백 함수
-  const onValid = (data: IForm) => {
-    if (data.password !== data.passwordConfirmation) {
-      setError(
-        "passwordConfirmation",
-        {
-          message: "Password are not the same.",
-        },
-        { shouldFocus: true }
-      );
-      // setError("extraError", { message: "Server offline." });
-    }
+  const handleValid = (data: IForm) => {
+    console.log("add to do", data.toDo);
+    setValue("toDo", "");
   };
 
   return (
     <div>
-      <form
-        style={{ display: "flex", flexDirection: "column" }}
-        // handleSubmit: onValid를 호출하기 전에 입력값을 유효성 검사함
-        onSubmit={handleSubmit(onValid)}
-      >
-        {/* 
-        필수 입력 필드에 대한 유효성 검사 및 기타 표준 HTML 유효성 규칙을 포함함
-        각 field는 registration process에서 key로 사용될 "이름"을 가져야 함
-        */}
+      <form onSubmit={handleSubmit(handleValid)}>
         <input
-          {...register("email", {
-            required: "Email is required",
-            pattern: {
-              value: /^[A-Za-z0-9._%+-]+@naver.com$/,
-              message: "Only naver.com emails allowed",
-            },
+          {...register("toDo", {
+            required: "Please write a To Do",
           })}
-          placeholder="Email"
+          placeholder="Write a to do"
         />
-        <span>{errors?.email?.message}</span>
-        <input
-          {...register("firstName", {
-            required: "write here",
-            validate: {
-              noYeguu: (value) =>
-                value.includes("yeguu") ? "no yeguu allowed" : true,
-              noNick: (value) =>
-                value.includes("nick") ? "no nick allowed" : true,
-            },
-          })}
-          placeholder="First Name"
-        />
-        <span>{errors?.firstName?.message}</span>
-        <input
-          {...register("lastName", { required: "write here" })}
-          placeholder="Last Name"
-        />
-        <span>{errors?.lastName?.message}</span>
-        <input
-          {...register("username", { required: "write here", minLength: 10 })}
-          placeholder="Username"
-        />
-        <span>{errors?.username?.message}</span>
-        <input
-          {...register("password", { required: "write here", minLength: 5 })}
-          placeholder="Password"
-        />
-        <span>{errors?.password?.message}</span>
-        <input
-          {...register("passwordConfirmation", {
-            required: "Password is required",
-            minLength: { value: 5, message: "Your password is too short." },
-          })}
-          placeholder="Password Confirmation"
-        />
-        <span>{errors?.passwordConfirmation?.message}</span>
         <button>Add</button>
-        <span>{errors?.extraError?.message}</span>
       </form>
     </div>
   );
@@ -172,4 +65,21 @@ input {...register('lastName', { required: true })}
 - shouldFocus?: boolean
   - 오류를 설정하는 동안 input에 focus을 맞춰야 함
   - input이 비활성화되면 shouldFocus가 작동하지 않음
+
+- setValue: (name: string, value: unknown, config?: Object) => void
+  - 필드 값을 업데이트
+  - 등록된 필드의 값을 동적으로 설정하고 form state를 확인하고 업데이트하는 옵션 가질 수 있음
+  - 동시에 불필요한 rerender를 피하려고 함
+  ```
+  setValue('firstname', 'hello');
+  onClick={() => setValue("firstName", "Bill")}
+  ```
+  
+- reset: (values?: Record, options?: Record) => void
+  - form state와 value 재설정
+  - 전체 form state 또는 form state의 일부를 재설정함
+  ```
+  reset() // form 전체 리셋
+  reset({ email: "" }); // form에서 특정 필드만 리셋
+  ```
 */

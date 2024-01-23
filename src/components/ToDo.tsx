@@ -1,10 +1,10 @@
 import { useSetRecoilState } from "recoil";
-import { IToDo, toDoState } from "../atoms";
+import { Categories, IToDo, toDoState } from "../atoms";
 
 const ToDo = ({ text, category, id }: IToDo) => {
   const setToDos = useSetRecoilState(toDoState);
 
-  const onClick = (newCategory: IToDo["category"]) => {
+  const onClick = (newCategory: Categories) => {
     setToDos((oldToDos) => {
       // 1) target 경로 찾기
       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
@@ -22,18 +22,27 @@ const ToDo = ({ text, category, id }: IToDo) => {
   return (
     <li>
       <span>{text}</span>
-      {category !== "DOING" && (
-        <button name="DOING" onClick={() => onClick("DOING")}>
+      {category !== Categories.DOING && (
+        <button
+          name={Categories.DOING}
+          onClick={() => onClick(Categories.DOING)}
+        >
           Doing
         </button>
       )}
-      {category !== "TO_DO" && (
-        <button name="TO_DO" onClick={() => onClick("TO_DO")}>
+      {category !== Categories.TO_DO && (
+        <button
+          name={Categories.TO_DO}
+          onClick={() => onClick(Categories.TO_DO)}
+        >
           To Do
         </button>
       )}
-      {category !== "DONE" && (
-        <button name="DONE" onClick={() => onClick("DONE")}>
+      {category !== Categories.DONE && (
+        <button
+          name={Categories.DONE}
+          onClick={() => onClick(Categories.DONE)}
+        >
           Done
         </button>
       )}

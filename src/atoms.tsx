@@ -12,14 +12,45 @@ export interface IToDo {
   category: Categories;
 }
 
+// localStorage에서 값을 가져오거나 저장하는 동작을 수행하는 함수
+const syncWithLocalStorage = (key: string, defaultValue: any) => {
+  // localStorage에서 해당 key에 저장된 값을 가져옴
+  const storedValue = localStorage.getItem(key);
+
+  // 저장된 값이 있는 경우
+  if (storedValue) {
+    try {
+      // 저장된 값을 JSON 파싱하여 반환
+      return JSON.parse(storedValue);
+    } catch (error) {
+      console.log("Error parsing localStorage:", error);
+    }
+  }
+
+  // 저장된 값이 없거나 파싱 오류가 발생한 경우 기본값 반환
+  return defaultValue;
+};
+
 export const categoryState = atom<Categories>({
   key: "category",
-  default: Categories.TO_DO,
+  // localStorage에서 값을 가져오거나 기본값을 설정
+  default: syncWithLocalStorage("category", Categories.TO_DO),
 });
 
 export const toDoState = atom<IToDo[]>({
   key: "toDo",
-  default: [],
+  // localStorage에서 값을 가져오거나 기본값을 설정
+  default: syncWithLocalStorage("toDo", []),
+  // effects_UNSTABLE: Recoil에서 상태 변경 시 특정 동작을 수행할 때 사용되는 부분
+  effects_UNSTABLE: [
+    // onSet: 상태가 변경될 때 실행되는 함수
+    ({ onSet }) => {
+      onSet((newValue) => {
+        // 변경된 상태를 JSON 문자열로 변환하여 localStorage에 저장
+        localStorage.setItem("toDo", JSON.stringify(newValue));
+      });
+    },
+  ],
 });
 
 export const toDoSelector = selector({

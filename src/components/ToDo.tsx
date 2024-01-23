@@ -6,16 +6,20 @@ const ToDo = ({ text, category, id }: IToDo) => {
 
   const onClick = (newCategory: Categories) => {
     setToDos((oldToDos) => {
-      // 1) target 경로 찾기
       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
-      // 2) 새 category로 새로운 to do 만들기
       const newToDo = { text, id, category: newCategory };
-      // 3) category update
       return [
         ...oldToDos.slice(0, targetIndex),
         newToDo,
         ...oldToDos.slice(targetIndex + 1),
       ];
+    });
+  };
+
+  const onDelete = () => {
+    setToDos((oldToDos) => {
+      const newToDos = oldToDos.filter((toDo) => toDo.id !== id);
+      return newToDos;
     });
   };
 
@@ -46,6 +50,7 @@ const ToDo = ({ text, category, id }: IToDo) => {
           Done
         </button>
       )}
+      <button onClick={onDelete}>Delete</button>
     </li>
   );
 };

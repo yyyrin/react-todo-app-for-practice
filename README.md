@@ -1,46 +1,51 @@
-# Getting Started with Create React App
+# To-Do App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+이 프로젝트는 `Recoil`을 사용하여 To-Do 리스트의 상태를 관리하고, `React Hook Form`을 활용하여 사용자로부터 To-Do 항목을 입력받는 기능을 제공하는 간단한 웹 애플리케이션입니다. 이 애플리케이션은 3개의 카테고리에서 To-Do 항목을 관리하며, To-Do 항목의 이동 및 삭제를 지원합니다. 또한, 브라우저의 `localStorage`를 활용하여 상태를 지속적으로 저장합니다.
 
-In the project directory, you can run:
+<br/>
 
-### `npm start`
+## 주요 기능
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+#### To-Do 생성 및 입력
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- `CreateToDo` 컴포넌트를 통해 To-Do 항목을 입력하고 추가 가능
+- `React Hook Form`을 사용하여 입력 양식의 유효성을 검사하며, 필수 입력 사항이 누락되지 않도록 함
 
-### `npm test`
+#### To-Do 항목 관리
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- `To-Do` 컴포넌트를 통해 각 To-Do 항목을 표시하고, 해당 항목의 상태를 변경하거나 삭제 가능
+- To-Do 항목은 세 가지 카테고리 중 하나에 속하며, **"To Do"**, **"Doing"**, **"Done"** 으로 구분됨
 
-### `npm run build`
+#### To-Do 카테고리 필터링
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- `ToDoList` 컴포넌트에서 카테고리를 선택하여 해당 카테고리에 속한 To-Do 항목만 필터링하여 볼 수 있음
+- 선택된 카테고리는 UI에 실시간으로 반영되며, 브라우저의 `localStorage`에 저장되어 유지됨
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### To-Do 상태의 지속적인 저장
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- 애플리케이션의 상태는 `Recoil`을 사용하여 관리되며, 변경된 상태는 `localStorage`에 지속적으로 저장됨
+- 페이지를 새로고침하거나 브라우저를 종료해도 To-Do 항목과 선택돤 카테고리는 유지됨
 
-### `npm run eject`
+<br/>
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Tech Stack
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- React
+- TypeScript
+- React Router Dom
+- styled-components
+- Recoil
+- React Hook Form
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+<br/>
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Quick start
 
-## Learn More
+Run the project by running:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+npm install
+npm start
+```
